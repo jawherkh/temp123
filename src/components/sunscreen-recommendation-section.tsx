@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState } from 'react';
@@ -17,15 +16,15 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { generateSunscreenRecommendation, GenerateSunscreenRecommendationInput } from '@/ai/flows/generate-sunscreen-recommendation';
 import { Icons } from './icons';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
-import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { Checkbox } from '@/components/ui/checkbox';
 
 const skinTypeOptions = [
   'oily',
@@ -42,6 +41,13 @@ const sunscreenTextureOptions = [
   'lotion',
 ];
 
+const spfOptions = [
+  15,
+  30,
+  50,
+  70,
+];
+
 const additionalFeaturesOptions = [
   'water-resistant',
   'fragrance-free',
@@ -49,12 +55,20 @@ const additionalFeaturesOptions = [
   'non-comedogenic',
 ];
 
+const skinConcernsOptions = [
+  'acne',
+  'aging',
+  'dark spots',
+  'redness',
+  'sensitivity',
+];
+
 const SunscreenRecommendationFormSchema = z.object({
   skinType: z.string().min(1, {
     message: 'Please select your skin type.',
   }),
-  skinConcerns: z.string().min(3, {
-    message: 'Please enter your skin concerns.',
+  skinConcerns: z.array(z.string()).min(1, {
+    message: 'Please select at least one skin concern.',
   }),
   sunscreenPreferences: z.object({
     spf: z.number().min(15, {
@@ -63,9 +77,7 @@ const SunscreenRecommendationFormSchema = z.object({
     texture: z.string().min(1, {
       message: 'Please select your preferred texture.',
     }),
-    additionalFeatures: z.string().min(1, {
-      message: 'Please enter any additional features you are looking for.',
-    }),
+    additionalFeatures: z.array(z.string()).optional(),
   }),
 });
 
@@ -77,11 +89,11 @@ export const SunscreenRecommendationSection = () => {
     resolver: zodResolver(SunscreenRecommendationFormSchema),
     defaultValues: {
       skinType: '',
-      skinConcerns: '',
+      skinConcerns: [],
       sunscreenPreferences: {
         spf: 30,
         texture: '',
-        additionalFeatures: '',
+        additionalFeatures: [],
       },
     },
   });
@@ -91,11 +103,11 @@ export const SunscreenRecommendationSection = () => {
     try {
       const input: GenerateSunscreenRecommendationInput = {
         skinType: values.skinType,
-        skinConcerns: values.skinConcerns.split(',').map(s => s.trim()),
+        skinConcerns: values.skinConcerns,
         sunscreenPreferences: {
           spf: values.sunscreenPreferences.spf,
           texture: values.sunscreenPreferences.texture,
-          additionalFeatures: values.sunscreenPreferences.additionalFeatures.split(',').map(s => s.trim()),
+          additionalFeatures: values.sunscreenPreferences.additionalFeatures ?? [],
         },
       };
 
@@ -128,67 +140,163 @@ export const SunscreenRecommendationSection = () => {
                 control={form.control}
                 name="skinType"
                 render={({ field }) => (
-                  <FormItem>
+                  <FormItem className="flex flex-col space-y-1.5">
                     <FormLabel>Skin Type</FormLabel>
                     <FormControl>
-                      <Input {...field} placeholder="e.g., Oily, Dry, Combination" />
+                      <RadioGroup onValueChange={field.onChange} defaultValue={field.value} className="flex flex-col space-y-1">
+                        {skinTypeOptions.map((type) => (
+                          <FormItem key={type} className="flex items-center space-x-3 space-y-0">
+                            <FormControl>
+                              <RadioGroupItem value={type} id={type} />
+                            </FormControl>
+                            <FormLabel htmlFor={type} className="font-normal">
+                              {type}
+                            </FormLabel>
+                          </FormItem>
+                        ))}
+                      </RadioGroup>
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
+
               <FormField
                 control={form.control}
                 name="skinConcerns"
                 render={({ field }) => (
-                  <FormItem>
+                  <FormItem className="flex flex-col space-y-1.5">
                     <FormLabel>Skin Concerns</FormLabel>
-                    <FormControl>
-                      <Textarea {...field} placeholder="e.g., Acne, Aging, Dark Spots" />
-                    </FormControl>
+                    <div className="grid gap-2">
+                      {skinConcernsOptions.map((concern) => (
+                        <FormField
+                          key={concern}
+                          control={form.control}
+                          name="skinConcerns"
+                          render={({ field }) => {
+                            return (
+                              <FormItem
+                                key={concern}
+                                className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm transition-all hover:bg-secondary/50 data-[state=checked]:bg-secondary/50"
+                              >
+                                <div className="space-y-0.5">
+                                  <FormLabel htmlFor={concern} className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed">
+                                    {concern}
+                                  </FormLabel>
+                                </div>
+                                <FormControl>
+                                  <Checkbox
+                                    checked={field.value?.includes(concern)}
+                                    onCheckedChange={(checked) => {
+                                      return checked ? field.onChange([...field.value, concern]) : field.onChange(field.value?.filter((value) => value !== concern))
+                                    }}
+                                    id={concern}
+                                  />
+                                </FormControl>
+                              </FormItem>
+                            )
+                          }}
+                        />
+                      ))}
+                    </div>
                     <FormMessage />
                   </FormItem>
                 )}
               />
+
               <FormField
                 control={form.control}
                 name="sunscreenPreferences.spf"
                 render={({ field }) => (
-                  <FormItem>
+                  <FormItem className="flex flex-col space-y-1.5">
                     <FormLabel>Preferred SPF Level</FormLabel>
                     <FormControl>
-                      <Input type="number" {...field} placeholder="e.g., 30, 50" />
+                      <RadioGroup onValueChange={(value) => field.onChange(Number(value))} defaultValue={String(field.value)} className="flex flex-col space-y-1">
+                        {spfOptions.map((spf) => (
+                          <FormItem key={spf} className="flex items-center space-x-3 space-y-0">
+                            <FormControl>
+                              <RadioGroupItem value={String(spf)} id={`spf-${spf}`} />
+                            </FormControl>
+                            <FormLabel htmlFor={`spf-${spf}`} className="font-normal">
+                              {spf}
+                            </FormLabel>
+                          </FormItem>
+                        ))}
+                      </RadioGroup>
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
+
               <FormField
                 control={form.control}
                 name="sunscreenPreferences.texture"
                 render={({ field }) => (
-                  <FormItem>
+                  <FormItem className="flex flex-col space-y-1.5">
                     <FormLabel>Preferred Texture</FormLabel>
                     <FormControl>
-                      <Input {...field} placeholder="e.g., Gel, Cream, Spray" />
+                      <RadioGroup onValueChange={field.onChange} defaultValue={field.value} className="flex flex-col space-y-1">
+                        {sunscreenTextureOptions.map((texture) => (
+                          <FormItem key={texture} className="flex items-center space-x-3 space-y-0">
+                            <FormControl>
+                              <RadioGroupItem value={texture} id={texture} />
+                            </FormControl>
+                            <FormLabel htmlFor={texture} className="font-normal">
+                              {texture}
+                            </FormLabel>
+                          </FormItem>
+                        ))}
+                      </RadioGroup>
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
+
               <FormField
                 control={form.control}
                 name="sunscreenPreferences.additionalFeatures"
                 render={({ field }) => (
-                  <FormItem>
+                  <FormItem className="flex flex-col space-y-1.5">
                     <FormLabel>Additional Features</FormLabel>
-                    <FormControl>
-                      <Textarea {...field} placeholder="e.g., Water-resistant, Fragrance-free, Mineral-based" />
-                    </FormControl>
+                    <div className="grid gap-2">
+                      {additionalFeaturesOptions.map((feature) => (
+                        <FormField
+                          key={feature}
+                          control={form.control}
+                          name="sunscreenPreferences.additionalFeatures"
+                          render={({ field }) => {
+                            return (
+                              <FormItem
+                                key={feature}
+                                className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm transition-all hover:bg-secondary/50 data-[state=checked]:bg-secondary/50"
+                              >
+                                <div className="space-y-0.5">
+                                  <FormLabel htmlFor={feature} className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed">
+                                    {feature}
+                                  </FormLabel>
+                                </div>
+                                <FormControl>
+                                  <Checkbox
+                                    checked={field.value?.includes(feature)}
+                                    onCheckedChange={(checked) => {
+                                      return checked ? field.onChange([...field.value, feature]) : field.onChange(field.value?.filter((value) => value !== feature))
+                                    }}
+                                    id={feature}
+                                  />
+                                </FormControl>
+                              </FormItem>
+                            )
+                          }}
+                        />
+                      ))}
+                    </div>
                     <FormMessage />
                   </FormItem>
                 )}
               />
+
               <Button type="submit" disabled={isLoading}>
                 {isLoading && (
                   <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
