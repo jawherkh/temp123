@@ -126,10 +126,10 @@ export const SunscreenRecommendationSection = () => {
       <h2 className="text-2xl font-semibold mb-4">
         Find Your Perfect Sunscreen
       </h2>
-      <Card className="mb-8">
+      <Card className="mb-8 border-secondary shadow-md">
         <CardHeader>
-          <CardTitle>Diagnostic Questionnaire</CardTitle>
-          <CardDescription>
+          <CardTitle className="text-primary">Diagnostic Questionnaire</CardTitle>
+          <CardDescription className="text-muted-foreground">
             Tell us about your skin and sunscreen preferences to get personalized recommendations.
           </CardDescription>
         </CardHeader>
@@ -297,7 +297,7 @@ export const SunscreenRecommendationSection = () => {
                 )}
               />
 
-              <Button type="submit" disabled={isLoading}>
+              <Button type="submit" disabled={isLoading} className="bg-accent text-accent-foreground hover:bg-accent/80">
                 {isLoading && (
                   <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
                 )}
@@ -315,10 +315,10 @@ export const SunscreenRecommendationSection = () => {
           </h3>
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
             {recommendations.map((recommendation: any) => (
-              <Card key={recommendation.productName}>
+              <Card key={recommendation.productName} className="border-primary shadow-md">
                 <CardHeader>
-                  <CardTitle>{recommendation.productName}</CardTitle>
-                  <CardDescription>{recommendation.brandName}</CardDescription>
+                  <CardTitle className="text-lg font-bold">{recommendation.productName}</CardTitle>
+                  <CardDescription className="text-sm text-muted-foreground">{recommendation.brandName}</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-2">
                   <p className="text-sm text-muted-foreground">
@@ -336,7 +336,7 @@ export const SunscreenRecommendationSection = () => {
                       <Badge key={index} variant="secondary" className="mr-1">{feature}</Badge>
                     ))}
                   </div>
-                  <Button variant="secondary">
+                  <Button variant="secondary" className="bg-secondary text-secondary-foreground hover:bg-secondary/80">
                     Learn More
                   </Button>
                 </CardContent>
