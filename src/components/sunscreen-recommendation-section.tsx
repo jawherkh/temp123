@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import {useState} from 'react';
 import {
   Card,
   CardContent,
@@ -16,15 +16,18 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
-import { Button } from '@/components/ui/button';
-import { generateSunscreenRecommendation, GenerateSunscreenRecommendationInput } from '@/ai/flows/generate-sunscreen-recommendation';
-import { Icons } from './icons';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
+import {Button} from '@/components/ui/button';
+import {
+  generateSunscreenRecommendation,
+  GenerateSunscreenRecommendationInput,
+} from '@/ai/flows/generate-sunscreen-recommendation';
+import {Icons} from './icons';
+import {zodResolver} from '@hookform/resolvers/zod';
+import {useForm} from 'react-hook-form';
 import * as z from 'zod';
-import { Badge } from '@/components/ui/badge';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { Checkbox } from '@/components/ui/checkbox';
+import {Badge} from '@/components/ui/badge';
+import {RadioGroup, RadioGroupItem} from '@/components/ui/radio-group';
+import {Checkbox} from '@/components/ui/checkbox';
 
 const skinTypeOptions = [
   'oily',
@@ -34,19 +37,9 @@ const skinTypeOptions = [
   'normal',
 ];
 
-const sunscreenTextureOptions = [
-  'gel',
-  'cream',
-  'spray',
-  'lotion',
-];
+const sunscreenTextureOptions = ['gel', 'cream', 'spray', 'lotion'];
 
-const spfOptions = [
-  15,
-  30,
-  50,
-  70,
-];
+const spfOptions = [15, 30, 50, 70];
 
 const additionalFeaturesOptions = [
   'water-resistant',
@@ -98,7 +91,9 @@ export const SunscreenRecommendationSection = () => {
     },
   });
 
-  async function onSubmit(values: z.infer<typeof SunscreenRecommendationFormSchema>) {
+  async function onSubmit(
+    values: z.infer<typeof SunscreenRecommendationFormSchema>
+  ) {
     setIsLoading(true);
     try {
       const input: GenerateSunscreenRecommendationInput = {
@@ -107,7 +102,8 @@ export const SunscreenRecommendationSection = () => {
         sunscreenPreferences: {
           spf: values.sunscreenPreferences.spf,
           texture: values.sunscreenPreferences.texture,
-          additionalFeatures: values.sunscreenPreferences.additionalFeatures ?? [],
+          additionalFeatures: values.sunscreenPreferences
+            .additionalFeatures as string[],
         },
       };
 
@@ -123,14 +119,12 @@ export const SunscreenRecommendationSection = () => {
 
   return (
     <section>
-      <h2 className="text-2xl font-semibold mb-4">
-        Find Your Perfect Sunscreen
-      </h2>
-      <Card className="mb-8 border-secondary shadow-md">
+      <Card className="mb-8 shadow-md">
         <CardHeader>
-          <CardTitle className="text-primary">Diagnostic Questionnaire</CardTitle>
+          <CardTitle className="text-xl">Diagnostic Questionnaire</CardTitle>
           <CardDescription className="text-muted-foreground">
-            Tell us about your skin and sunscreen preferences to get personalized recommendations.
+            Tell us about your skin and sunscreen preferences to get personalized
+            recommendations.
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -139,13 +133,18 @@ export const SunscreenRecommendationSection = () => {
               <FormField
                 control={form.control}
                 name="skinType"
-                render={({ field }) => (
+                render={({field}) => (
                   <FormItem className="flex flex-col space-y-1.5">
                     <FormLabel>Skin Type</FormLabel>
                     <FormControl>
-                      <RadioGroup onValueChange={field.onChange} defaultValue={field.value} className="flex flex-col space-y-1">
-                        {skinTypeOptions.map((type) => (
-                          <FormItem key={type} className="flex items-center space-x-3 space-y-0">
+                      <RadioGroup
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                        className="flex flex-col space-y-1">
+                        {skinTypeOptions.map(type => (
+                          <FormItem
+                            key={type}
+                            className="flex items-center space-x-3 space-y-0">
                             <FormControl>
                               <RadioGroupItem value={type} id={type} />
                             </FormControl>
@@ -164,37 +163,47 @@ export const SunscreenRecommendationSection = () => {
               <FormField
                 control={form.control}
                 name="skinConcerns"
-                render={({ field }) => (
+                render={({field}) => (
                   <FormItem className="flex flex-col space-y-1.5">
                     <FormLabel>Skin Concerns</FormLabel>
                     <div className="grid gap-2">
-                      {skinConcernsOptions.map((concern) => (
+                      {skinConcernsOptions.map(concern => (
                         <FormField
                           key={concern}
                           control={form.control}
                           name="skinConcerns"
-                          render={({ field }) => {
+                          render={({field}) => {
                             return (
                               <FormItem
                                 key={concern}
-                                className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm transition-all hover:bg-secondary/50 data-[state=checked]:bg-secondary/50"
-                              >
+                                className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm transition-all hover:bg-secondary/50 data-[state=checked]:bg-secondary/50">
                                 <div className="space-y-0.5">
-                                  <FormLabel htmlFor={concern} className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed">
+                                  <FormLabel
+                                    htmlFor={concern}
+                                    className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed">
                                     {concern}
                                   </FormLabel>
                                 </div>
                                 <FormControl>
                                   <Checkbox
                                     checked={field.value?.includes(concern)}
-                                    onCheckedChange={(checked) => {
-                                      return checked ? field.onChange([...field.value, concern]) : field.onChange(field.value?.filter((value) => value !== concern))
+                                    onCheckedChange={checked => {
+                                      return checked
+                                        ? field.onChange([
+                                            ...field.value,
+                                            concern,
+                                          ])
+                                        : field.onChange(
+                                            field.value?.filter(
+                                              value => value !== concern
+                                            )
+                                          );
                                     }}
                                     id={concern}
                                   />
                                 </FormControl>
                               </FormItem>
-                            )
+                            );
                           }}
                         />
                       ))}
@@ -207,17 +216,24 @@ export const SunscreenRecommendationSection = () => {
               <FormField
                 control={form.control}
                 name="sunscreenPreferences.spf"
-                render={({ field }) => (
+                render={({field}) => (
                   <FormItem className="flex flex-col space-y-1.5">
                     <FormLabel>Preferred SPF Level</FormLabel>
                     <FormControl>
-                      <RadioGroup onValueChange={(value) => field.onChange(Number(value))} defaultValue={String(field.value)} className="flex flex-col space-y-1">
-                        {spfOptions.map((spf) => (
-                          <FormItem key={spf} className="flex items-center space-x-3 space-y-0">
+                      <RadioGroup
+                        onValueChange={value => field.onChange(Number(value))}
+                        defaultValue={String(field.value)}
+                        className="flex flex-col space-y-1">
+                        {spfOptions.map(spf => (
+                          <FormItem
+                            key={spf}
+                            className="flex items-center space-x-3 space-y-0">
                             <FormControl>
                               <RadioGroupItem value={String(spf)} id={`spf-${spf}`} />
                             </FormControl>
-                            <FormLabel htmlFor={`spf-${spf}`} className="font-normal">
+                            <FormLabel
+                              htmlFor={`spf-${spf}`}
+                              className="font-normal">
                               {spf}
                             </FormLabel>
                           </FormItem>
@@ -232,13 +248,18 @@ export const SunscreenRecommendationSection = () => {
               <FormField
                 control={form.control}
                 name="sunscreenPreferences.texture"
-                render={({ field }) => (
+                render={({field}) => (
                   <FormItem className="flex flex-col space-y-1.5">
                     <FormLabel>Preferred Texture</FormLabel>
                     <FormControl>
-                      <RadioGroup onValueChange={field.onChange} defaultValue={field.value} className="flex flex-col space-y-1">
-                        {sunscreenTextureOptions.map((texture) => (
-                          <FormItem key={texture} className="flex items-center space-x-3 space-y-0">
+                      <RadioGroup
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                        className="flex flex-col space-y-1">
+                        {sunscreenTextureOptions.map(texture => (
+                          <FormItem
+                            key={texture}
+                            className="flex items-center space-x-3 space-y-0">
                             <FormControl>
                               <RadioGroupItem value={texture} id={texture} />
                             </FormControl>
@@ -257,37 +278,47 @@ export const SunscreenRecommendationSection = () => {
               <FormField
                 control={form.control}
                 name="sunscreenPreferences.additionalFeatures"
-                render={({ field }) => (
+                render={({field}) => (
                   <FormItem className="flex flex-col space-y-1.5">
                     <FormLabel>Additional Features</FormLabel>
                     <div className="grid gap-2">
-                      {additionalFeaturesOptions.map((feature) => (
+                      {additionalFeaturesOptions.map(feature => (
                         <FormField
                           key={feature}
                           control={form.control}
                           name="sunscreenPreferences.additionalFeatures"
-                          render={({ field }) => {
+                          render={({field}) => {
                             return (
                               <FormItem
                                 key={feature}
-                                className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm transition-all hover:bg-secondary/50 data-[state=checked]:bg-secondary/50"
-                              >
+                                className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm transition-all hover:bg-secondary/50 data-[state=checked]:bg-secondary/50">
                                 <div className="space-y-0.5">
-                                  <FormLabel htmlFor={feature} className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed">
+                                  <FormLabel
+                                    htmlFor={feature}
+                                    className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed">
                                     {feature}
                                   </FormLabel>
                                 </div>
                                 <FormControl>
                                   <Checkbox
                                     checked={field.value?.includes(feature)}
-                                    onCheckedChange={(checked) => {
-                                      return checked ? field.onChange([...field.value, feature]) : field.onChange(field.value?.filter((value) => value !== feature))
+                                    onCheckedChange={checked => {
+                                      return checked
+                                        ? field.onChange([
+                                            ...field.value,
+                                            feature,
+                                          ])
+                                        : field.onChange(
+                                            field.value?.filter(
+                                              value => value !== feature
+                                            )
+                                          );
                                     }}
                                     id={feature}
                                   />
                                 </FormControl>
                               </FormItem>
-                            )
+                            );
                           }}
                         />
                       ))}
@@ -297,7 +328,10 @@ export const SunscreenRecommendationSection = () => {
                 )}
               />
 
-              <Button type="submit" disabled={isLoading} className="bg-accent text-accent-foreground hover:bg-accent/80">
+              <Button
+                type="submit"
+                disabled={isLoading}
+                className="bg-accent text-accent-foreground hover:bg-accent/80">
                 {isLoading && (
                   <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
                 )}
@@ -315,28 +349,40 @@ export const SunscreenRecommendationSection = () => {
           </h3>
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
             {recommendations.map((recommendation: any) => (
-              <Card key={recommendation.productName} className="border-primary shadow-md">
+              <Card
+                key={recommendation.productName}
+                className="shadow-md">
                 <CardHeader>
-                  <CardTitle className="text-lg font-bold">{recommendation.productName}</CardTitle>
-                  <CardDescription className="text-sm text-muted-foreground">{recommendation.brandName}</CardDescription>
+                  <CardTitle className="text-lg font-bold">
+                    {recommendation.productName}
+                  </CardTitle>
+                  <CardDescription className="text-sm text-muted-foreground">
+                    {recommendation.brandName}
+                  </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-2">
                   <p className="text-sm text-muted-foreground">
                     {recommendation.description}
                   </p>
                   <p>
-                    <span className="font-semibold">SPF:</span> {recommendation.spf}
+                    <span className="font-semibold">SPF:</span>{' '}
+                    {recommendation.spf}
                   </p>
                   <p>
-                    <span className="font-semibold">Texture:</span> {recommendation.texture}
+                    <span className="font-semibold">Texture:</span>{' '}
+                    {recommendation.texture}
                   </p>
                   <div>
                     <span className="font-semibold">Features:</span>
                     {recommendation.features.map((feature: string, index: number) => (
-                      <Badge key={index} variant="secondary" className="mr-1">{feature}</Badge>
+                      <Badge key={index} variant="secondary" className="mr-1">
+                        {feature}
+                      </Badge>
                     ))}
                   </div>
-                  <Button variant="secondary" className="bg-secondary text-secondary-foreground hover:bg-secondary/80">
+                  <Button
+                    variant="secondary"
+                    className="bg-secondary text-secondary-foreground hover:bg-secondary/80">
                     Learn More
                   </Button>
                 </CardContent>

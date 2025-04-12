@@ -8,26 +8,26 @@ body {
 
 @layer base {
   :root {
-    --background: 220 14% 96%; /* Light gray for background */
-    --foreground: 220 20% 20%; /* Dark gray for text */
+    --background: 240 5.9% 10%;
+    --foreground: 0 0% 98%;
     --card: 0 0% 100%;
     --card-foreground: 0 0% 3.9%;
     --popover: 0 0% 100%;
     --popover-foreground: 0 0% 3.9%;
-    --primary: 207 71% 53%; /* Soft blue (#B0E2FF) in HSL */
-    --primary-foreground: 0 0% 98%;
-    --secondary: 142 47% 78%; /* Muted lavender for secondary elements */
-    --secondary-foreground: 220 20% 20%; /* Dark gray for text on secondary */
-    --muted: 220 10% 88%; /* Very light gray for muted backgrounds */
-    --muted-foreground: 220 15% 40%; /* Medium gray for muted text */
-    --accent: 43 98% 57%; /* Soft orange for accents */
-    --accent-foreground: 0 0% 100%; /* White text on accents */
-    --destructive: 0 84.2% 60.2%;
+    --primary: 43 98% 57%;
+    --primary-foreground: 0 0% 0%;
+    --secondary: 240 5.9% 10%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 240 3.7% 15.9%;
+    --muted-foreground: 240 5.3% 26.1%;
+    --accent: 43 98% 57%;
+    --accent-foreground: 0 0% 0%;
+    --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 0% 98%;
-    --border: 220 13% 91%;
-    --input: 220 15% 85%;
-    --ring: 207 71% 53%; /* Soft blue for focus rings */
-    --radius: 0.75rem; /* Increased for rounded corners */
+    --border: 240 3.7% 15.9%;
+    --input: 240 3.7% 15.9%;
+    --ring: 43 98% 57%;
+    --radius: 0.75rem;
     --sidebar-background: 0 0% 98%;
     --sidebar-foreground: 240 5.3% 26.1%;
     --sidebar-primary: 240 5.9% 10%;
@@ -38,26 +38,26 @@ body {
     --sidebar-ring: 217.2 91.2% 59.8%;
   }
   .dark {
-    --background: 220 14% 10%; /* Darker gray for dark mode background */
-    --foreground: 220 10% 85%; /* Lighter gray for dark mode text */
-    --card: 220 14% 10%;
-    --card-foreground: 220 10% 85%;
-    --popover: 220 14% 10%;
-    --popover-foreground: 220 10% 85%;
-    --primary: 207 71% 53%; /* Soft blue (#B0E2FF) in HSL */
-    --primary-foreground: 0 0% 9%;
-    --secondary: 142 47% 32%; /* Darker muted lavender for dark mode secondary */
-    --secondary-foreground: 220 10% 85%; /* Lighter gray for text on secondary */
-    --muted: 220 12% 20%; /* Medium gray for dark mode muted backgrounds */
-    --muted-foreground: 220 15% 60%; /* Lighter medium gray for muted text */
-    --accent: 43 98% 57%; /* Soft orange for accents */
-    --accent-foreground: 0 0% 100%; /* White text on accents */
+    --background: 0 0% 0%;
+    --foreground: 0 0% 98%;
+    --card: 0 0% 0%;
+    --card-foreground: 0 0% 98%;
+    --popover: 0 0% 0%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 43 98% 57%;
+    --primary-foreground: 0 0% 0%;
+    --secondary: 240 5.9% 10%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 240 3.7% 15.9%;
+    --muted-foreground: 240 5.3% 26.1%;
+    --accent: 43 98% 57%;
+    --accent-foreground: 0 0% 0%;
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 0% 98%;
-    --border: 220 12% 25%;
-    --input: 220 15% 30%;
-    --ring: 207 71% 53%; /* Soft blue for focus rings */
-    --radius: 0.75rem; /* Increased for rounded corners */
+    --border: 240 3.7% 15.9%;
+    --input: 240 3.7% 15.9%;
+    --ring: 43 98% 57%;
+    --radius: 0.75rem;
     --sidebar-background: 240 5.9% 10%;
     --sidebar-foreground: 240 4.8% 95.9%;
     --sidebar-primary: 224.3 76.3% 48%;
@@ -77,3 +77,4 @@ body {
     @apply bg-background text-foreground;
   }
 }
+
